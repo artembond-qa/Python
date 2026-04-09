@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install system dependencies (важно!)
+      - name: Install system dependencies for Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -37,21 +37,20 @@ jobs:
             libxdamage1 \
             libxrandr2 \
             libgbm1 \
-            libasound2
+            libasound2t64 \
+            libgtk-3-0t64
 
       - name: Install Chrome and Chromedriver
         uses: browser-actions/setup-chrome@v2
         with:
           install-chromedriver: true
 
-      - name: Install Python packages
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install pytest selenium
 
-      - name: Run tests with virtual display
-        run: |
-          xvfb-run -a pytest -v --tb=short
+      - name: Run tests
+        run: xvfb-run -a pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
-          DISPLAY: :99
