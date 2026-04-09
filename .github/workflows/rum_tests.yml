@@ -24,28 +24,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: Install Chrome and Chromedriver
         uses: browser-actions/setup-chrome@v2
         with:
           install-chromedriver: true
-          install-dependencies: true
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
           pip install pytest selenium
 
-      - name: Run Selenium tests
+      - name: Run tests
         run: pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
-        run: pytest -v --tb=short
-        env:
-          GITHUB_ACTIONS: true
-     
  
