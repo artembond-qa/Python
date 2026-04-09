@@ -14,7 +14,6 @@ on:
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-    name: Selenium Autotests
 
     steps:
       - name: Checkout code
@@ -25,23 +24,34 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Chrome 146 + matching Chromedriver
+      - name: Install system dependencies (важно!)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libdrm2 \
+            libxkbcommon0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libgbm1 \
+            libasound2
+
+      - name: Install Chrome and Chromedriver
         uses: browser-actions/setup-chrome@v2
         with:
-          chrome-version: 146
           install-chromedriver: true
-          install-dependencies: true
 
-      - name: Remove conflicting chromedriver from PATH (important!)
-        run: |
-          sudo rm -f /opt/hostedtoolcache/setup-chrome/chromedriver/stable/x64/chromedriver || true
-
-      - name: Install Python dependencies
+      - name: Install Python packages
         run: |
           pip install --upgrade pip
           pip install pytest selenium
 
-      - name: Run tests
-        run: pytest -v --tb=short
+      - name: Run tests with virtual display
+        run: |
+          xvfb-run -a pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
+          DISPLAY: :99
