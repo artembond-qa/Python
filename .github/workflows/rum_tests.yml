@@ -44,5 +44,8 @@ jobs:
         run: pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
+        run: pytest -v --tb=short
+        env:
+          GITHUB_ACTIONS: true
      
  
