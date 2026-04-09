@@ -23,12 +23,16 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'           # 3.14 пока нестабильно на GitHub, лучше 3.12
+          python-version: '3.12'
+          cache: 'pip'
 
-      - name: Install Chrome Browser
-        uses: browser-actions/setup-chrome@v1
+      - name: Install Chrome and Chromedriver
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-chromedriver: true
+          install-dependencies: true
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           if [ -f requirements.txt ]; then
@@ -36,7 +40,7 @@ jobs:
           fi
           pip install pytest selenium
 
-      - name: Run tests
+      - name: Run Selenium tests
         run: pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
