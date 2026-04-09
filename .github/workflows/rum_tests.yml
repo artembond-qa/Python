@@ -25,12 +25,18 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Chrome and Chromedriver
+      - name: Install Chrome 146 + matching Chromedriver
         uses: browser-actions/setup-chrome@v2
         with:
+          chrome-version: 146
           install-chromedriver: true
+          install-dependencies: true
 
-      - name: Install dependencies
+      - name: Remove conflicting chromedriver from PATH (important!)
+        run: |
+          sudo rm -f /opt/hostedtoolcache/setup-chrome/chromedriver/stable/x64/chromedriver || true
+
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install pytest selenium
@@ -39,4 +45,3 @@ jobs:
         run: pytest -v --tb=short
         env:
           GITHUB_ACTIONS: true
- 
