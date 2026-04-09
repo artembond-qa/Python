@@ -1,1 +1,37 @@
+nema: Run autotest 
 
+
+on:
+  workflow_dispatch:
+     inputs:
+       deployment_target:
+        description: select tests to run 
+         required: true
+          type: choice
+           default: all
+            options:
+             - all
+
+jobs:
+  run-tests:
+   run-on: ubuntu-latest
+   name: Tests 
+   steps:
+     - name: Copy source code
+     uses: action/checkout@v4
+     - name: Set up Python env
+     uses: action/setup-python@v5
+     name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install pytest selenium
+
+      - name: Run tests
+        run: pytest -v --tb=short
+        env:
+          GITHUB_ACTIONS: true
+      - name: run tests
+      run: pytest -v
