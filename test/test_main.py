@@ -8,7 +8,6 @@ from pages.product import ProductPage
 @pytest.fixture()
 def driver():
     driver = webdriver.Chrome()
-    driver.minimize_window()
     driver.implicitly_wait(3)
     yield driver
     driver.quit()
